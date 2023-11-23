@@ -9,8 +9,7 @@
 
 # RStudio files
 .Rproj.user/
+Categorical_Proj.Rproj
 
-# produced vignettes
-vignettes/*.html
-vignettes/*.pdf
-
+# Others
+Categorical_Project_files
