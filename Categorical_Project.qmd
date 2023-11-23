@@ -19,7 +19,7 @@ We aim to understand how the neural network works and to implement it on simulat
 
 ```{r}
 #| panel: sidebar
-textInput("vector_input", "Enter vector (comma-separated):", "1,2,1")
+textInput("vector_input", "Enter vector (comma-separated):", "2,3,1")
 ```
 
 ```{r}
