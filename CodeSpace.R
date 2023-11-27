@@ -23,6 +23,7 @@ getLayerSize <- function(X, y, hidden_neurons, train=TRUE) {
   return(size)
 }
 
+#initialize parameters
 initializeParameters <- function(X, list_layer_size){
   
   m <- dim(X)[2]
@@ -49,7 +50,7 @@ sigmoid<-function(x){
   return(1/(1+exp(-x)))
 }
 
-
+#calculate output of each neuron
 forwardPropagation <- function(X, params, list_layer_size){
   
   m <- dim(X)[2]
@@ -66,15 +67,15 @@ forwardPropagation <- function(X, params, list_layer_size){
   Z2 <- W2 %*% A1 + b2
   A2 <- sigmoid(Z2)
   
-  cache <- list("Z1" = Z1,
+  fwd <- list("Z1" = Z1,
                 "A1" = A1, 
                 "Z2" = Z2,
                 "A2" = A2)
   
-  return (cache)
+  return (fwd)
 }
 
-
+# Calculate Binary Cross-Entropy loss
 computeCost <- function(X, y, fwd_prop) {
   m <- dim(X)[2]
   A2 <- fwd_prop$A2
@@ -83,8 +84,8 @@ computeCost <- function(X, y, fwd_prop) {
   return (cost)
 }
 
-
-backwardPropagation <- function(X, y, cache, params, list_layer_size){
+#Calculate partial derivatives
+backwardPropagation <- function(X, y, fwd, params, list_layer_size){
   
   m <- dim(X)[2]
   
@@ -92,8 +93,8 @@ backwardPropagation <- function(X, y, cache, params, list_layer_size){
   n_h <- list_layer_size$n_h
   n_y <- list_layer_size$n_y
   
-  A2 <- cache$A2
-  A1 <- cache$A1
+  A2 <- fwd$A2
+  A1 <- fwd$A1
   W2 <- params$W2
   
   dZ2 <- A2 - y
@@ -115,6 +116,7 @@ backwardPropagation <- function(X, y, cache, params, list_layer_size){
 }
 
 
+# Gradient descent
 updateParameters <- function(grads, params, learning_rate){
   
   W1 <- params$W1
@@ -142,7 +144,7 @@ updateParameters <- function(grads, params, learning_rate){
 }
 
 
-trainModel <- function(X, y, num_iteration, hidden_neurons, lr){
+MainModel <- function(X, y, num_iteration, hidden_neurons, lr){
   
   layer_size <- getLayerSize(X, y, hidden_neurons)
   init_params <- initializeParameters(X, layer_size)
