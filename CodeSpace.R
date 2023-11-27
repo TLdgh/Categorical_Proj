@@ -32,9 +32,9 @@ initializeParameters <- function(X, list_layer_size){
   n_y <- list_layer_size$n_y
   
   W1 <- matrix(runif(n_h * n_x), nrow = n_h, ncol = n_x, byrow = TRUE) * 0.01
-  b1 <- matrix(rep(0, n_h), nrow = n_h)
+  b1 <- matrix(rep(0, n_h * m), nrow = n_h, ncol = m)
   W2 <- matrix(runif(n_y * n_h), nrow = n_y, ncol = n_h, byrow = TRUE) * 0.01
-  b2 <- matrix(rep(0, n_y), nrow = n_y)
+  b2 <- matrix(rep(0, n_y * m), nrow = n_y, ncol = m)
   
   params <- list("W1" = W1,
                  "b1" = b1, 
@@ -61,12 +61,9 @@ forwardPropagation <- function(X, params, list_layer_size){
   W2 <- params$W2
   b2 <- params$b2
   
-  b1_new <- matrix(rep(b1, m), nrow = n_h)
-  b2_new <- matrix(rep(b2, m), nrow = n_y)
-  
-  Z1 <- W1 %*% X + b1_new
+  Z1 <- W1 %*% X + b1
   A1 <- sigmoid(Z1)
-  Z2 <- W2 %*% A1 + b2_new
+  Z2 <- W2 %*% A1 + b2
   A2 <- sigmoid(Z2)
   
   cache <- list("Z1" = Z1,
