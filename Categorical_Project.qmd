@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(plotly)
 library(tidyverse)
 library(shiny)
+source("CodeSpace.R")
 ```
 
 # Introduction
@@ -110,24 +111,29 @@ output$plot1 <- renderPlotly({
 ```
 
 ```{r}
-sigmoid<-function(x){
-  return(1/(1+exp(-x)))
+circulo <- function(x, R, centroX=0, centroY=0){
+r = R * sqrt(runif(x))
+theta = runif(x) * 2 * pi
+x1 = centroX + r * cos(theta)
+x2 = centroY + r * sin(theta)
+
+z = data.frame(x1 = x1, x2 = x2)
+return(z)
 }
+
+datos1 <- circulo(150,0.5)
+datos2 <- circulo(150,1.5)
+datos1$y <- 1
+datos2$y <- 0
+datos <- rbind(datos1,datos2)
+rm(datos1,datos2, circulo)
+
+head(datos)
+
+ggplot(datos,aes(x1,x2, col = as.factor(y))) + geom_point()
 ```
 
 ```{r}
-W1<-matrix(c(0.81,0.33,0.29,0.37,
-             0.12,0.44,0.22,0.12,
-             0.92,0.72,0.53,0.27), ncol = 3)
-W1
-
-x<-matrix(c(0.5,1,0.8),ncol = 1)
-
-x
-
-W1%*%x
-
-sigmoid(W1%*%x)
+test<-NeuralNet$new(data=datos, hidden_neurons=4, num_iteration=10000, learning_rate=0.01)
 ```
-
 
