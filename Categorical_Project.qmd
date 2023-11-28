@@ -156,14 +156,14 @@ print(confusion_matrix)
 ```
 
 ```{r}
-test<-NeuralNet$new(data=datos[1:800,], hidden_neurons=40, num_iteration=50000, learning_rate=0.95)
+test<-NeuralNet$new(data=datos[1:600,], hidden_neurons=40, num_iteration=50000, learning_rate=0.95)
 plot(test$output$cost_hist)
 ```
 
 ```{r}
-y_pred<-test$makePrediction(testdata=datos[201:1000,], 40)
+y_pred<-test$makePrediction(testdata=datos[601:1000,], 40)
 
-df_pred<-data.frame(x1=datos[201:1000,"x1"], x2=datos[201:1000,"x2"], y_pred=as.numeric(y_pred), y_true=datos[201:1000,"y"])%>%
+df_pred<-data.frame(x1=datos[601:1000,"x1"], x2=datos[601:1000,"x2"], y_pred=as.numeric(y_pred), y_true=datos[601:1000,"y"])%>%
   gather("Type", "Val", 3:4)
 
 ggplot(df_pred, aes(x1, x2, col=as.factor(Val))) +
