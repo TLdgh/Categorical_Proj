@@ -133,7 +133,9 @@ head(datos)
 
 ggplot(datos,aes(x1,x2, col = as.factor(y))) + geom_point()
 ```
+
 ```{r}
+library("caret")
 train_data <- datos[1:600, ]
 test_data <- datos[601:1000, ]
 
@@ -173,3 +175,7 @@ ggplot(df_pred, aes(x1, x2, col=as.factor(Val))) +
              y = "X2")
 ```
 
+```{r}
+confusion_matrix <- confusionMatrix(as.factor(y_pred), as.factor(datos[601:1000,"y"]))
+print(confusion_matrix)
+```
