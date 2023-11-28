@@ -121,19 +121,29 @@ z = data.frame(x1 = x1, x2 = x2)
 return(z)
 }
 
-datos1 <- circulo(150,0.5)
-datos2 <- circulo(150,1.5)
+datos1 <- circulo(500,0.5)
+datos2 <- circulo(500,1.5)
 datos1$y <- 1
 datos2$y <- 0
 datos <- rbind(datos1,datos2)
 rm(datos1,datos2, circulo)
-
+rws<-sample(1:nrow(datos))
+datos <-datos[rws,]
 head(datos)
 
 ggplot(datos,aes(x1,x2, col = as.factor(y))) + geom_point()
 ```
 
 ```{r}
-test<-NeuralNet$new(data=datos, hidden_neurons=4, num_iteration=10000, learning_rate=0.01)
+test<-NeuralNet$new(data=datos[1:800,], hidden_neurons=40, num_iteration=60000, learning_rate=0.95)
+plot(test$output$cost_hist)
+```
+
+```{r}
+y_pred<-test$makePrediction(testdata=datos[201:1000,], 40)
+
+df_pred<-data.frame(x1=datos[201:1000,"x1"], x2=datos[201:1000,"x2"], y_pred=as.numeric(y_pred))
+ggplot(df_pred,aes(x1,x2, col = as.factor(y_pred))) + geom_point()
+
 ```
 
