@@ -142,8 +142,13 @@ plot(test$output$cost_hist)
 ```{r}
 y_pred<-test$makePrediction(testdata=datos[201:1000,], 40)
 
-df_pred<-data.frame(x1=datos[201:1000,"x1"], x2=datos[201:1000,"x2"], y_pred=as.numeric(y_pred))
-ggplot(df_pred,aes(x1,x2, col = as.factor(y_pred))) + geom_point()
+df_pred<-data.frame(x1=datos[201:1000,"x1"], x2=datos[201:1000,"x2"], y_pred=as.numeric(y_pred), y_true=datos[201:1000,"y"])%>%
+  gather("Type", "Val", 3:4)
 
+ggplot(df_pred, aes(x1, x2, col=as.factor(Val))) +
+        geom_point() +
+        facet_wrap(~Type,scales = 'free',labeller = label_parsed) + theme_bw() +
+        labs(x = "X1",
+             y = "X2")
 ```
 
