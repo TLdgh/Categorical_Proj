@@ -133,6 +133,27 @@ head(datos)
 
 ggplot(datos,aes(x1,x2, col = as.factor(y))) + geom_point()
 ```
+```{r}
+train_data <- datos[1:600, ]
+test_data <- datos[601:1000, ]
+
+logistic_model <- glm(y ~ x1 + x2, data = train_data, family = binomial(link = "logit"))
+
+p <- predict(logistic_model, newdata = test_data, type = "response")
+glm_pred <- ifelse(p > 0.5, 1, 0)
+
+df_glm_pred<-data.frame(x1=test_data[,"x1"], x2=test_data[,"x2"], y_pred=as.numeric(glm_pred), y_true=test_data[,"y"])%>%
+  gather("Type", "Val", 3:4)
+
+ggplot(df_glm_pred, aes(x1, x2, col=as.factor(Val))) +
+        geom_point() +
+        facet_wrap(~Type,scales = 'free',labeller = label_parsed) + theme_bw() +
+        labs(x = "X1",
+             y = "X2")
+
+confusion_matrix <- confusionMatrix(as.factor(glm_pred), as.factor(test_data$y))
+print(confusion_matrix)
+```
 
 ```{r}
 test<-NeuralNet$new(data=datos[1:800,], hidden_neurons=40, num_iteration=50000, learning_rate=0.95)
