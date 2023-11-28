@@ -152,10 +152,6 @@ ggplot(df_glm_pred, aes(x1, x2, col=as.factor(Val))) +
         facet_wrap(~Type,scales = 'free',labeller = label_parsed) + theme_bw() +
         labs(x = "X1",
              y = "X2")
-
-#confusion matrix for logistic
-confusion_matrix <- confusionMatrix(as.factor(glm_pred), as.factor(test_data$y))
-print(confusion_matrix)
 ```
 
 ```{r}
@@ -177,7 +173,31 @@ ggplot(df_pred, aes(x1, x2, col=as.factor(Val))) +
 ```
 
 ```{r}
-#confusion matrix for NN
-confusion_matrix <- confusionMatrix(as.factor(y_pred), as.factor(datos[601:1000,"y"]))
-print(confusion_matrix)
+cm_logistic <- confusionMatrix(as.factor(glm_pred), as.factor(test_data$y))
+table_logistic <- cm_logistic$table
+
+cm_nn <- confusionMatrix(as.factor(y_pred), as.factor(datos[601:1000,"y"]))
+table_nn <- cm_nn$table
+
+print("Confusion Matrix - Logistic Regression:")
+print(table_logistic)
+
+print("Confusion Matrix - Neural Network:")
+print(table_nn)
+```
+
+```{r}
+accuracy_logistic <- cm_logistic$overall['Accuracy']
+sensitivity_logistic <- cm_logistic$byClass['Sensitivity']
+
+accuracy_nn <- cm_nn$overall['Accuracy']
+sensitivity_nn <- cm_nn$byClass['Sensitivity']
+
+comparison_table <- data.frame(
+  Model = c("Logistic Regression", "Neural Network"),
+  Accuracy = c(accuracy_logistic, accuracy_nn),
+  Sensitivity = c(sensitivity_logistic, sensitivity_nn)
+)
+
+print(comparison_table)
 ```
