@@ -135,7 +135,7 @@ ggplot(datos,aes(x1,x2, col = as.factor(y))) + geom_point()
 ```
 
 ```{r}
-test<-NeuralNet$new(data=datos[1:800,], hidden_neurons=40, num_iteration=60000, learning_rate=0.95)
+test<-NeuralNet$new(data=datos[1:800,], hidden_neurons=40, num_iteration=50000, learning_rate=0.95)
 plot(test$output$cost_hist)
 ```
 

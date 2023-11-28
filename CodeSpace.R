@@ -202,8 +202,7 @@ NeuralNet<-setRefClass(
       
       testlayer_size <- getLayerSize(testX, testy, hidden_neurons)
       testparams <- .self$output$updated_params
-      print(.self$output$updated_params)
-      
+
       testfwd_prop <- forwardPropagation(testX, testparams, testlayer_size)
       pred <- testfwd_prop$A2
       
