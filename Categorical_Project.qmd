@@ -153,6 +153,7 @@ ggplot(df_glm_pred, aes(x1, x2, col=as.factor(Val))) +
         labs(x = "X1",
              y = "X2")
 
+#confusion matrix for logistic
 confusion_matrix <- confusionMatrix(as.factor(glm_pred), as.factor(test_data$y))
 print(confusion_matrix)
 ```
@@ -176,6 +177,7 @@ ggplot(df_pred, aes(x1, x2, col=as.factor(Val))) +
 ```
 
 ```{r}
+#confusion matrix for NN
 confusion_matrix <- confusionMatrix(as.factor(y_pred), as.factor(datos[601:1000,"y"]))
 print(confusion_matrix)
 ```
