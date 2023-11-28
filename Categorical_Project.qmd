@@ -211,6 +211,19 @@ head(datos)
 ggplot(datos,aes(x1,x2, col = as.factor(y))) + geom_point()
 ```
 
+For comparison, we first employed a simple logistic regression, a fundamental statistical model for binary classification, to analyze the dataset we simulated.
+
+In logistic regression, the probability of the target variable $Y$ being in a particular class is modeled as a logistic function of a linear combination of the explanatory variables $(X_1,X_2,...,X_n)$. Our simulated dataset only includes $(X_1,X_2)$. 
+
+The logistic function, often called the sigmoid function, is defined as: 
+$\sigma(x)=\frac{1}{1+e^{-x}}$
+
+For our binary classification, the logistic regression model is expressed as:
+$P(Y=1|X)=\frac{1}{1+e^{-(\beta_0+\beta_1X_1+\beta_2X_2)}}$
+, where $P(Y=1|X)$ is the probability that the target variable $Y$ is in class 1 given the predictor $X=(X_1,X_2)$.$\beta_0,\beta_1,\beta_2$ are the coefficients of the model.
+
+The logistic regression model is implemented using R's 'glm' function with a binomial family. The function estimates the coefficients of the model using maximum likelihood estimation. We train the model on the training set, which includes 800 observations.
+
 ```{r}
 library("caret")
 train_data <- datos[1:800, ]
@@ -231,6 +244,8 @@ ggplot(df_glm_pred, aes(x1, x2, col=as.factor(Val))) +
              y = "X2")
 ```
 
+From the plot comparing the predict data points with the original data points, we can see that due to the linear nature of the logistic regression model, it is inadequate for capturing the circular patterns of the data.
+
 ```{r}
 test<-NeuralNet$new(data=datos[1:800,], hidden_neurons=40, num_iteration=40000, learning_rate=0.95)
 plot(test$output$cost_hist)
@@ -249,6 +264,21 @@ ggplot(df_pred, aes(x1, x2, col=as.factor(Val))) +
              y = "X2")
 ```
 
+To better describe the performance of the model classification, we used the confusion matrix. The confusion matrix cab ve represented as:
+$\begin{bmatrix}TrueNegative & FalsePositive\\ FalseNegative & TruePositive\end{bmatrix}$
+
+True Positives (TP): Correctly predicted positive observations.
+True Negatives (TN): Correctly predicted negative observations.
+False Positives (FP): Incorrectly predicted positive observations (Type I error).
+False Negatives (FN): Incorrectly predicted negative observations (Type II error).
+
+With the confusion matrix, we can exam the following measures of classificaiton:
+$Accuracy=\frac{TP+TN}{TP+TN+FP+FN}$
+$Recall=\frac{TP}{TP+FN}$
+$Precision=\frac{TP}{TP+FP}$
+$F1\ Score=2\times\frac{Precision\times Recall}{Precision+Recall}$
+
+We choose to compare the Accuracy and the F1-Score of both logistic regression model and NN model. The accuracy measures the overall correctness of the model, the proportion of total true predictions to the total number of cases. The F1-Score balance the trade-off between precision and recall.
 ```{r}
 cm_logistic <- confusionMatrix(as.factor(glm_pred), as.factor(test_data$y))
 table_logistic <- cm_logistic$table
@@ -265,16 +295,22 @@ print(table_nn)
 
 ```{r}
 accuracy_logistic <- cm_logistic$overall['Accuracy']
-sensitivity_logistic <- cm_logistic$byClass['Sensitivity']
+precision_logistic <- cm_logistic$byClass['Precision']
+recall_logistic <- cm_logistic$byClass['Recall']
+f1_score_logistic <- 2 * (precision_logistic * recall_logistic) / (precision_logistic + recall_logistic)
 
 accuracy_nn <- cm_nn$overall['Accuracy']
-sensitivity_nn <- cm_nn$byClass['Sensitivity']
+precision_nn <- cm_nn$byClass['Precision']
+recall_nn <- cm_nn$byClass['Recall']
+f1_score_nn <- 2 * (precision_nn * recall_nn) / (precision_nn + recall_nn)
 
 comparison_table <- data.frame(
   Model = c("Logistic Regression", "Neural Network"),
   Accuracy = c(accuracy_logistic, accuracy_nn),
-  Sensitivity = c(sensitivity_logistic, sensitivity_nn)
+  F1_Score = c(f1_score_logistic, f1_score_nn)
 )
 
 print(comparison_table)
 ```
+
+The table shows that the Neural Network model substantially outperforms the Logistic Regression model on our simulated dataset. The higher values in both accuracy and F1 Score for the Neural Network suggest that it is more capable of handling the complexities of the dataset, particularly its non-linear patterns.
