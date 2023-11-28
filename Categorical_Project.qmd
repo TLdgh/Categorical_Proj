@@ -255,8 +255,6 @@ ggplot(df_glm_pred, aes(x1, x2, col=as.factor(Val))) +
              y = "X2")
 ```
 
-From the plot comparing the predict data points with the original data points, we can see that due to the linear nature of the logistic regression model, it is inadequate for capturing the circular patterns of the data.
-
 ```{r}
 test<-NeuralNet$new(data=datos[1:800,], hidden_neurons=40, num_iteration=40000, learning_rate=0.95)
 
@@ -279,8 +277,10 @@ ggplot(df_pred, aes(x1, x2, col=as.factor(Val))) +
              y = "X2")
 ```
 
+From the plot comparing the predict data points with the original data points, we can see that due to the linear nature of the logistic regression model, it is inadequate for capturing the circular patterns of the data. While the NN model has no problem to classify complex data with circular distribution.
+
 To better describe the performance of the model classification, we used the confusion matrix. The confusion matrix cab ve represented as:
-$\begin{bmatrix}TrueNegative & FalsePositive\\ FalseNegative & TruePositive\end{bmatrix}$
+$$Confusion\ Matrix=\begin{bmatrix}TrueNegative & FalsePositive\\ FalseNegative & TruePositive\end{bmatrix}$$
 
 True Positives (TP): Correctly predicted positive observations.
 True Negatives (TN): Correctly predicted negative observations.
@@ -288,10 +288,10 @@ False Positives (FP): Incorrectly predicted positive observations (Type I error)
 False Negatives (FN): Incorrectly predicted negative observations (Type II error).
 
 With the confusion matrix, we can exam the following measures of classificaiton:
-$Accuracy=\frac{TP+TN}{TP+TN+FP+FN}$
-$Recall=\frac{TP}{TP+FN}$
-$Precision=\frac{TP}{TP+FP}$
-$F1\ Score=2\times\frac{Precision\times Recall}{Precision+Recall}$
+$$Accuracy=\frac{TP+TN}{TP+TN+FP+FN}$$
+$$Recall=\frac{TP}{TP+FN}$$
+$$Precision=\frac{TP}{TP+FP}$$
+$$F1\ Score=2\times\frac{Precision\times Recall}{Precision+Recall}$$
 
 We choose to compare the Accuracy and the F1-Score of both logistic regression model and NN model. The accuracy measures the overall correctness of the model, the proportion of total true predictions to the total number of cases. The F1-Score balance the trade-off between precision and recall.
 ```{r}
