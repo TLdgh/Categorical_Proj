@@ -21,7 +21,7 @@ h2{font-size: 12pt;}
 </style>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 
 library(plotly)
 library(tidyverse)
@@ -221,7 +221,15 @@ rm(datos1,datos2, circulo)
 rws<-sample(1:nrow(datos))
 datos <-datos[rws,]
 
-ggplot(datos,aes(x1,x2, col = as.factor(y))) + geom_point()+labs(title="Figure 1: Original Response and Covariates")
+datos%>%plot_ly()%>%
+    add_trace(
+      x=~x1, y=~x2, z=~as.factor(y), 
+      type = "scatter3d",
+      mode = "markers",
+      color=~as.factor(y),
+      marker = list(size = 2))%>%
+  layout(title="Figure 1: Original Response and Covariates",
+         scene=list(zaxis=list(title="y", tickvals=c(0,1))))
 ```
 
 As one can see, the response could not be linearly separated into different clusters.
